@@ -39,6 +39,24 @@ export function MyWorkTable() {
     return "bg-gray-100 text-gray-800";
   };
 
+  const formatTimestamp = (ts?: string) => {
+    if (!ts) return '—';
+    try {
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return ts;
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const yyyy = d.getFullYear();
+      const mm = pad(d.getMonth() + 1);
+      const dd = pad(d.getDate());
+      const hh = pad(d.getHours());
+      const min = pad(d.getMinutes());
+      const ss = pad(d.getSeconds());
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    } catch (e) {
+      return ts;
+    }
+  };
+
   return (
     <div>
       <Table>
@@ -75,7 +93,7 @@ export function MyWorkTable() {
               >
                 {item.number}
               </TableCell>
-              <TableCell className="text-gray-600">{item.created_at || item.created}</TableCell>
+              <TableCell className="text-gray-600">{formatTimestamp(item.sys_created_on || item.created_at || item.created)}</TableCell>
               <TableCell>
                 {item.priority}
               </TableCell>
