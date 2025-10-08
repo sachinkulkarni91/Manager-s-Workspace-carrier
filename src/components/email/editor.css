@@ -1,0 +1,25 @@
+.editor-wrapper {
+  position: relative;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  background-color: #F8F8F8;
+}
+
+.editor-container {
+  position: relative;
+  background: #fff;
+  min-height: 200px;
+  font-family: Verdana, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 16px;
+}
+
+.editor-placeholder {
+  color: #999;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  pointer-events: none;
+  user-select: none;
+}
