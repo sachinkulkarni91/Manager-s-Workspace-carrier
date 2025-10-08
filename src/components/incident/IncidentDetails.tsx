@@ -165,6 +165,7 @@ export default function IncidentDetails() {
     const [isAssigning, setIsAssigning] = useState(false);
     const [assignmentError, setAssignmentError] = useState<string | null>(null);
     const [assignmentSuccess, setAssignmentSuccess] = useState<string | null>(null);
+    const [isSaved, setIsSaved] = useState(false);
 
     // Get the current incident tab data
     const currentTab = tabs.find(tab => tab.id === activeTabId);
@@ -321,6 +322,9 @@ export default function IncidentDetails() {
                 
                 // Optional: Update local state or refresh data
                 console.log('Assignment successful:', response);
+                // Show saved state on the Save & Assign button briefly
+                setIsSaved(true);
+                setTimeout(() => setIsSaved(false), 3000);
                 
                 // Clear success message after 5 seconds
                 setTimeout(() => {
@@ -640,16 +644,7 @@ export default function IncidentDetails() {
                     </div>
 
                     {/* Assignment Status Messages */}
-                    {assignedToUser && !assignmentError && !assignmentSuccess && (
-                        <div className="mt-4">
-                            <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                                <Info size={16} className="text-blue-600 flex-shrink-0" />
-                                <span className="text-sm text-blue-700">
-                                    Ready to assign incident <strong>{incident.number}</strong> to <strong>{assignedToUser.name}</strong>. Click "Save & Assign" button to proceed.
-                                </span>
-                            </div>
-                        </div>
-                    )}
+                    {/* Info box removed as requested */}
                     
                     {(assignmentError || assignmentSuccess) && (
                         <div className="mt-4">
@@ -1074,20 +1069,25 @@ export default function IncidentDetails() {
                 <div className="flex items-start gap-3">
                     <button 
                         className={`inline-flex items-center gap-2 border px-3 py-1.5 text-sm mr-2 cursor-pointer ${
-                            isAssigning 
+                            (isAssigning || isSaved) 
                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
                                 : assignedToUser 
                                     ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
                                     : 'bg-gray-50 hover:bg-gray-100'
                         }`}
-                        onClick={assignedToUser ? handleAssignIncident : undefined}
-                        disabled={isAssigning}
-                        title={assignedToUser ? 'Save and assign incident' : 'Save incident'}
+                        onClick={assignedToUser && !isSaved ? handleAssignIncident : undefined}
+                        disabled={isAssigning || isSaved}
+                        title={isSaved ? 'Saved' : (assignedToUser ? 'Save and assign incident' : 'Save incident')}
                     >
                         {isAssigning ? (
                             <>
                                 <div className="animate-spin w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full"></div>
                                 Assigning...
+                            </>
+                        ) : isSaved ? (
+                            <>
+                                <Save size={16} />
+                                Saved
                             </>
                         ) : (
                             <>
